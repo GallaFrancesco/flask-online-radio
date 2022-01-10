@@ -1,5 +1,8 @@
 body {
-    background-color: black
+    background-image: url(../img/logo-smaller.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: black;
 }
 
 /* player box - global for each page the same */
@@ -15,7 +18,7 @@ body {
     text-align: center;
     color: rgb(231, 211, 211);
     font-family: 'Tomorrow', sans-serif;
-    font-size: 14px;
+    font-size: 20px;
 }
 
 .player-txt {
@@ -31,6 +34,18 @@ body {
     font-family: 'Tomorrow', sans-serif;
     border: none;
     text-align: center;
+}
+
+.artist {
+}
+
+.album {
+}
+
+.title {
+}
+
+.songdate {
 }
 
 /* global wrapper for each page, the content will come inside - except index.html becaue there is the logo pic */

@@ -1,17 +1,28 @@
 from flask import current_app as app
-
+import mpd
 
 def getCurrentSong() -> dict:
-    if app.config["FLASK_ENV"] == "development":
-        return dict(author="name of author", title="name of title")
-    else:
-        try:
-            with open("/opt/ices/log/channel1/ices.cue") as f:
-                lines = [line for line in f]
-                title = lines[-2].lower()
-                author = lines[-1].lower()
-                print(title, author)
-        except Exception as e:
-            print(e)
-            return dict(author="name of author", title="name of title")
-        return dict(author=author, title=title)
+    artist = "Unknown artist"
+    album = "Unknown album"
+    title = "Unknown title"
+    songdate = ""
+    try: # connect / disconnect each time (and monitor)
+        client = mpd.MPDClient()
+        client.timeout = 10
+        client.idletimeout = None
+        client.connect('localhost', 6600)
+        song = client.currentsong()
+        if 'title' in song:
+            title = song['title']
+        if 'artist' in song:
+            artist = song['artist']
+        if 'album' in song:
+            album = song['album']
+        if 'date' in song:
+            songdate = song['date']
+        client.close()
+        client.disconnect()
+    except Exception as e:
+        print(e)
+
+    return dict(artist=artist, title=title, album=album, songdate=songdate)

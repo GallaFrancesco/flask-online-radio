@@ -1,14 +1,7 @@
 # Online Radio 
-Online radio station built on top of the Icecast server using Ices as the streaming client. It is a server-centric website bridging backend streaming Icecast server with frontend GUI. It is written in Python Flask with a little bit of vanilla Javascript.
-
-Online radio is broadcasting live 24/7, streaming mostly ambient/experimental/electronic music. All audio files are located on a VPS server, the code for the website is on the same server. It uses NGINX as reverse proxy and UWSGI as a web server.
+Online radio station built on top of the Icecast server using MPD as the streaming client. It is a server-centric website bridging backend streaming Icecast server with frontend GUI. It is written in Python Flask with websockets (flask_sockets) to provide song information from MPD.
 
 URLs for main homepage:   
-https://atma.fm  
+http://fragal.eu/webradio
 
-URLs for direct streaming server links:  
-https://atma.fm/channel1-128k  
-https://atma.fm/channel2-128k
-
-
-
+Forked from https://github.com/ExperimentalHypothesis/flask-online-radio to support MPD as a streaming client.
