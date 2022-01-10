@@ -5,17 +5,12 @@ import mpd
 from application import sockets
 from .utils.mpd import getCurrentSong
 
-client = mpd.MPDClient()
-client.timeout = 10
-client.idletimeout = None
-client.connect('localhost', 6600)
-
 @sockets.route('/_socket_mpd')
 def socket_mpd(ws):
     while True:
         message = ws.receive()
         if message == "update":
-            song = getCurrentSong(client)
+            song = getCurrentSong()
             artist = song['artist'];
             album = song['album'];
             title = song['title'];
