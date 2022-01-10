@@ -24,7 +24,7 @@ WebsocketClass.prototype = {
         var $this = this;
         current_interval_id = setInterval(
             function(){ $this.socket.send('update'); },
-            500) // update time
+            1000) // update time
     },
     _onOpenEvent : function() {
         Messenger().post({
@@ -38,7 +38,11 @@ WebsocketClass.prototype = {
             $(".artist").text(parsed['artist']);
             $(".album").text(parsed['album']);
             $(".title").text(parsed['title']);
-            $(".songdate").text(parsed['songdate']);
+            if(parsed['songdate'] === "") {
+                $(".songdate").text("");
+            } else {
+                $(".songdate").text("- " + parsed['songdate']);
+            }
         }
         else {
             Messenger().post({
@@ -59,7 +63,7 @@ WebsocketClass.prototype = {
                     if(connect == 0) {
                         connect = 1;
                         return opts.error({
-                            status: 500,
+                            status: 1000,
                             readyState: 0,
                             responseText: 0
                         });
@@ -77,7 +81,7 @@ WebsocketClass.prototype = {
 
 // Initialize a new websocket (the first one)
 var ws = new WebsocketClass("wss://fragal.eu/webradio/_socket_mpd");
-window.setTimeout('ws.initWebsocket()', 500);
+window.setTimeout('ws.initWebsocket()', 1000);
 ws.initAutoSend();
 
 // Before changing the page, we close the socket correctly.
