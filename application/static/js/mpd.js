@@ -64,7 +64,7 @@ WebsocketClass.prototype = {
                             responseText: 0
                         });
                     }
-                    ws = new WebsocketClass("ws://fragal.eu/webradio/_socket_mpd");
+                    ws = new WebsocketClass("wss://fragal.eu/webradio/_socket_mpd");
                     ws.initWebsocket();
                     ws.initAutoSend();
                     reconnecting_attempt = false;
@@ -76,7 +76,7 @@ WebsocketClass.prototype = {
 };
 
 // Initialize a new websocket (the first one)
-var ws = new WebsocketClass("ws://fragal.eu/webradio/_socket_mpd");
+var ws = new WebsocketClass("wss://fragal.eu/webradio/_socket_mpd");
 window.setTimeout('ws.initWebsocket()', 500);
 ws.initAutoSend();
 
