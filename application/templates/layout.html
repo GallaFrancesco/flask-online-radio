@@ -16,30 +16,38 @@
 	</head>
 
 	<body>
-		<section class="player-box">
-			<br>
-			<span class="player-txt"> ~  tunza.fm  ~ </span>
-			<br>
-			<div class="player-button">
-				<button id="bt-txt" class="player-button-txt" onclick="toggle_play()">listen now</button>
-				<button class="button" style="border: none;" onclick="toggle_play()"><i id="bt-icon"
-													class="fa fa-volume-up  fa-3x"></i></button>
-			</div>
-            <br>
-			<audio id="player">
-			  <source src="https://fragal.eu/radio">
-            </audio>
-            <p class="title"> {{ title }} </p>
-	        <small class="artist"> {{ artist }} </small>
-            <br>
-            <small class="album"> {{ album }} </small>
-			<small class="songdate">- {{ songdate }} </small>
-		</section>
+	  <div class="player-container">
+        <div class="player-box">
+          <br>
+          <span class="player-txt"> ~  tunza.fm  ~ </span>
+          <br>
+          <div class="player-button">
+            <button id="bt-txt" class="player-button-txt" onclick="toggle_play()">listen now</button>
+            <button class="button" style="border: none;" onclick="toggle_play()"><i id="bt-icon"
+                                                                                    class="fa fa-volume-up  fa-3x"></i></button>
+          </div>
+          <br>
+          <audio id="player">
+            <source src="https://fragal.eu/radio">
+          </audio>
+          <p id="title"> {{ title }} </p>
+          <small id="artist"> {{ artist }} </small>
+          <br>
+          <small id="album"> {{ album }} </small>
+          <small id="songdate">- {{ songdate }} </small>
+        </div>
+        <div class="playlist-box">
+          <br>
+          <div class="playlist-title">
+            <span> [ up next ] </span>
+          </div>
+          <div class="playlist-text">
+            <ul id="playlist-ul"></ul>
+          </div>
+          <br>
+        </div>
+		</div>
 	  <script src="{{ url_for('static', filename='js/play.js')}}"> </script>
-      <script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        crossorigin="anonymous"></script>
       <script src="{{ url_for('static', filename='js/mpd.js')}}"> </script>
 	  <script src="https://kit.fontawesome.com/37c4968eb2.js" crossorigin="anonymous"></script>
 	</body>

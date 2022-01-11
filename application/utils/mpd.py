@@ -26,3 +26,18 @@ def getCurrentSong() -> dict:
         print(e)
 
     return dict(artist=artist, title=title, album=album, songdate=songdate)
+
+def getCurrentPlaylist() -> dict:
+    queue = []
+    try:
+        client = mpd.MPDClient()
+        client.timeout = 10
+        client.idletimeout = None
+        client.connect('localhost', 6600)
+        idx = client.playlist().index("file: " + client.currentsong()['file'])
+        queue = client.playlistinfo()[idx+1:idx+11]
+        client.close()
+        client.disconnect()
+    except Exception as e:
+        print(e)
+    return dict(data=queue)

@@ -2,8 +2,10 @@ var WebsocketClass = function(host){
     this.socket = new WebSocket(host);
 }
 
-var current_interval_id;
+var interval_id;
+var timer_ticks = 0; // every 5 update msg send also a playlist msg
 var reconnecting_attempt = false;
+
 WebsocketClass.prototype = {
     initWebsocket : function(){
         var $this = this;
@@ -20,11 +22,24 @@ WebsocketClass.prototype = {
             $this._onCloseEvent();
         }
     },
+    sendUpdate : function(){
+        var $this = this;
+        $this.socket.send('update');
+    },
+    sendPlaylist : function() {
+        var $this = this;
+        if (!(timer_ticks % 5)) {
+            $this.socket.send('playlist');
+            timer_ticks = -1;
+        } else {
+            timer_ticks += 1;
+        }
+    },
     initAutoSend : function(){
         var $this = this;
-        current_interval_id = setInterval(
-            function(){ $this.socket.send('update'); },
-            1000) // update time
+        interval_id = setInterval(
+            function(){ $this.sendUpdate(); $this.sendPlaylist(); },
+            1000); // update time (1s)
     },
     _onOpenEvent : function() {
         Messenger().post({
@@ -35,13 +50,29 @@ WebsocketClass.prototype = {
     _onMessageEvent : function(e){
         var parsed = JSON.parse(e.data);
         if (parsed['received'] == 'update') {
-            $(".artist").text(parsed['artist']);
-            $(".album").text(parsed['album']);
-            $(".title").text(parsed['title']);
+            document.getElementById("artist").innerHTML = parsed['artist'];
+            document.getElementById("album").innerHTML = parsed['album'];
+            document.getElementById("title").innerHTML = parsed['title'];
             if(parsed['songdate'] === "") {
-                $(".songdate").text("");
+                document.getElementById("songdate").innerHTML = "";
             } else {
-                $(".songdate").text("- " + parsed['songdate']);
+                document.getElementById("songdate").innerHTML = parsed['title'];
+            }
+        }
+        else if(parsed['received'] == 'playlist') {
+            var data = parsed['data'];
+            var ul = document.getElementById("playlist-ul");
+            while(ul.firstChild){
+                ul.removeChild(ul.firstChild);
+            }
+            for(var i=0; i<data.length; i++) {
+                var obj = data[i];
+                var li = document.createElement("li");
+                var small = document.createElement("small");
+                small.className = "playlist-txt"
+                small.appendChild(document.createTextNode(obj.artist + " - " + obj.title))
+                li.appendChild(small);
+                ul.appendChild(li);
             }
         }
         else {
@@ -52,11 +83,12 @@ WebsocketClass.prototype = {
         }
     },
     _onCloseEvent : function(){
-        window.clearInterval(current_interval_id)
+        window.clearInterval(interval_id)
         if(reconnecting_attempt == false) {
             reconnecting_attempt = true;
             var connect = 0;
-            window.clearInterval(current_interval_id);
+            window.clearInterval(interval_id);
+            console.log("y is it disconnected?")
             Messenger().run({
                 errorMessage: 'Disconnected from Server',
                 action: function(opts) {
