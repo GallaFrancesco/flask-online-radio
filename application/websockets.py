@@ -3,10 +3,11 @@ import json
 import mpd
 
 from application import sockets
-from .utils.mpd import getCurrentSong, getCurrentPlaylist
+from .utils.mpd import getCurrentSong, updatePlaylist
 
 @sockets.route('/_socket_mpd')
 def socket_mpd(ws):
+    queue = []
     while True:
         message = ws.receive()
         if message == "update":
@@ -17,7 +18,7 @@ def socket_mpd(ws):
             songdate = song['songdate'];
             ws.send(json.dumps(dict(received=message, artist=artist, album=album, title=title, songdate=songdate)))
         elif message == "playlist":
-            queue = getCurrentPlaylist()
-            ws.send(json.dumps(dict(received=message, data=queue['data'])))
+            queue = updatePlaylist(queue)
+            ws.send(json.dumps(dict(received=message, data=queue)))
         else:
             ws.send(json.dumps(dict(received=message)))

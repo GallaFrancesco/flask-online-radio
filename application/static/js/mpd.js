@@ -28,7 +28,7 @@ WebsocketClass.prototype = {
     },
     sendPlaylist : function() {
         var $this = this;
-        if (!(timer_ticks % 5)) {
+        if (!(timer_ticks % 2)) {
             $this.socket.send('playlist');
             timer_ticks = -1;
         } else {

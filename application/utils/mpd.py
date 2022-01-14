@@ -27,17 +27,36 @@ def getCurrentSong() -> dict:
 
     return dict(artist=artist, title=title, album=album, songdate=songdate)
 
-def getCurrentPlaylist() -> dict:
+def getCurrentPlaylist(client = None, idx = 0) -> list:
     queue = []
     try:
-        client = mpd.MPDClient()
-        client.timeout = 10
-        client.idletimeout = None
-        client.connect('localhost', 6600)
-        idx = client.playlist().index("file: " + client.currentsong()['file'])
+        if not client:
+            client = mpd.MPDClient()
+            client.timeout = 10
+            client.idletimeout = None
+            client.connect('localhost', 6600)
         queue = client.playlistinfo()[idx+1:idx+11]
         client.close()
         client.disconnect()
     except Exception as e:
         print(e)
-    return dict(data=queue)
+    return queue
+
+def updatePlaylist(queue = [], client = None) -> list:
+    try:
+        if not client:
+            client = mpd.MPDClient()
+            client.timeout = 10
+            client.idletimeout = None
+            client.connect('localhost', 6600)
+        status = client.status()
+        idx = int(status['song'])
+        elapsed = float(status['elapsed'])
+        if elapsed < 5 or not queue: # song started from less than 5 seconds or queue empty
+            queue = getCurrentPlaylist(client, idx)
+        else:
+            client.close()
+            client.disconnect()
+    except Exception as e:
+        print(e)
+    return queue
