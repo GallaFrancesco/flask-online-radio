@@ -56,7 +56,15 @@ WebsocketClass.prototype = {
             if(parsed['songdate'] === "") {
                 document.getElementById("songdate").innerHTML = "";
             } else {
-                document.getElementById("songdate").innerHTML = parsed['title'];
+                document.getElementById("songdate").innerHTML = parsed['songdate'];
+            }
+            if(parsed['missing'] === "") {
+                document.getElementById("missing").innerHTML = "";
+            } else {
+                missing = parsed['missing'];
+                min = Math.floor(missing / 60)
+                sec = missing % 60
+                document.getElementById("missing").innerHTML = min + " min, " + sec + " sec";
             }
         }
         else if(parsed['received'] == 'playlist') {

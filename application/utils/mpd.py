@@ -5,7 +5,8 @@ def getCurrentSong() -> dict:
     artist = "Unknown artist"
     album = "Unknown album"
     title = "Unknown title"
-    songdate = ""
+    songdate = "n/a"
+    missing = "n/a"
     try: # connect / disconnect each time (and monitor)
         client = mpd.MPDClient()
         client.timeout = 10
@@ -20,12 +21,13 @@ def getCurrentSong() -> dict:
             album = song['album']
         if 'date' in song:
             songdate = song['date']
+        status = client.status()
+        missing = int(float(status['duration']) - float(status['elapsed']))
         client.close()
         client.disconnect()
     except Exception as e:
         print(e)
-
-    return dict(artist=artist, title=title, album=album, songdate=songdate)
+    return dict(artist=artist, title=title, album=album, songdate=songdate, missing=missing)
 
 def getCurrentPlaylist(client = None, idx = 0) -> list:
     queue = []

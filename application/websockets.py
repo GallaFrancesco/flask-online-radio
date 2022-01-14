@@ -12,13 +12,11 @@ def socket_mpd(ws):
         message = ws.receive()
         if message == "update":
             song = getCurrentSong()
-            artist = song['artist'];
-            album = song['album'];
-            title = song['title'];
-            songdate = song['songdate'];
-            ws.send(json.dumps(dict(received=message, artist=artist, album=album, title=title, songdate=songdate)))
+            song['received'] = message
+            ws.send(json.dumps(song))
         elif message == "playlist":
             queue = updatePlaylist(queue)
             ws.send(json.dumps(dict(received=message, data=queue)))
         else:
             ws.send(json.dumps(dict(received=message)))
+        
